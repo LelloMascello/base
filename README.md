@@ -35,11 +35,11 @@ base/
 
 
 ```
-[user@computer ~]$ base add orc -s 'http://localhost:8080/chat/completions/api' -k '124qwerty...'
+[user@computer ~]$ base add orc -c orc_config.toml
 [+] Orchestrator added successfully. Model set as main coordinator.
 
-[user@computer ~]$ base add wrk -s 'http://localhost:8081/chat/completions/api' -k '124qwerty...' -d 'this is a agent to perform face recognition task'
-[+] Worker added successfully. The Orchestrator will use this description to route tasks.
+[user@computer ~]$ base add wrk -c wrk1_conf.toml
+[+] Worker added successfully.
 
 [user@computer ~]$ base list wrk
 ID   Type   Endpoint                                      Description
@@ -82,4 +82,35 @@ ID   Type   Endpoint                                      Description
 │ ╰──────────────────────────────────────────────────────────────────╯ │
 │  [Enter] Submit  |  [Ctrl+F] Attach external file  |  [Esc] Quit     │
 ╰──────────────────────────────────────────────────────────────────────╯
+```
+
+
+```
+# agent_config.toml
+
+[agent]
+name = "my_agent"
+role = "orchestrator" # Can be "orchestrator" or "worker"
+endpoint = "https://openrouter.ai/api/v1/chat/completions"
+api_key = "sk-or-v1-124qwerty..."
+model = "meta-llama/llama-3.1-70b-instruct"
+
+# (Required for workers, ignored for orchestrators) 
+# The Orchestrator reads this to know what tasks to route to this specific agent.
+description = "Analyzes project structures and delegates tasks to specialized workers."
+
+system_prompt = "You are the orchestrator. Output your plan as a JSON array."
+
+[parameters]
+temperature = 0.2
+top_p = 0.9
+max_tokens = 4096
+context_window = 128000
+# "json_object" forces valid JSON output (crucial for Orchestrator). "text" is standard for workers.
+response_format = "json_object" 
+
+[headers]
+# Optional: Required by some providers like OpenRouter, ignored by Groq/Local if left empty.
+"HTTP-Referer" = "https://github.com/yourusername/base"
+"X-Title" = "BASE Terminal App"
 ```
