@@ -1,8 +1,39 @@
 # base
 BASE, acronimo che sta per Bounded Agent System Environment è un harness agentico, leggero e progettato per girare da terminale.
 
+```
+base/
+├── Cargo.toml          # Il file di configurazione di Cargo (dipendenze, versione)
+├── README.md           # Il file in cui metteremo la documentazione scritta prima
+└── src/
+    ├── main.rs         # Entry point: decide se eseguire comandi CLI o avviare la TUI
+    │
+    ├── cli/            # Gestione dei comandi da terminale (usando la libreria Clap)
+    │   ├── mod.rs      # Espone il modulo cli al resto del programma
+    │   └── args.rs     # Definisce la logica di `base add orc`, `base add wrk`, ecc.
+    │
+    ├── tui/            # Tutta l'interfaccia grafica terminale (usando Ratatui)
+    │   ├── mod.rs
+    │   ├── app.rs      # Lo STATO dell'app (es. cosa c'è scritto nel prompt, agenti attivi)
+    │   ├── ui.rs       # Il DISEGNO dell'interfaccia (bordi, colori, layout)
+    │   └── events.rs   # Gestione della tastiera (es. intercetta CTRL+F o Invio)
+    │
+    ├── agent/          # La logica di comunicazione con le IA
+    │   ├── mod.rs
+    │   ├── api.rs      # Il client HTTP (Reqwest) per parlare con Groq/OpenRouter
+    │   ├── orc.rs      # Logica specifica dell'Orchestratore (creazione del piano)
+    │   └── worker.rs   # Logica specifica dei Worker (esecuzione dei task)
+    │
+    ├── sandbox/        # Il sistema di sicurezza (Il "recinto")
+    │   ├── mod.rs
+    │   └── fs.rs       # Funzioni personalizzate per leggere/scrivere file in sicurezza
+    │
+    └── config/         # Gestione delle preferenze utente
+        ├── mod.rs
+        └── store.rs    # Salva e legge le API key e i Worker in un file locale (es. .base.json)
+```
 
-## comandi:
+
 ```
 [user@computer ~]$ base add orc -s 'http://localhost:8080/chat/completions/api' -k '124qwerty...'
 [+] Orchestrator added successfully. Model set as main coordinator.
