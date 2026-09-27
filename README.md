@@ -41,6 +41,18 @@ base/
 [user@computer ~]$ base add wrk -s 'http://localhost:8081/chat/completions/api' -k '124qwerty...' -d 'this is a agent to perform face recognition task'
 [+] Worker added successfully. The Orchestrator will use this description to route tasks.
 
+[user@computer ~]$ base list wrk
+ID   Type   Endpoint                                      Description
+-------------------------------------------------------------------------------------------------------
+1    wrk    http://localhost:8081/chat/completions/api    this is a agent to perform face recognition task
+2    wrk    https://api.groq.com/openai/v1/chat/...       specialized in python code generation
+
+[user@computer ~]$ base remove wrk 1
+[-] Worker 1 removed successfully.
+
+[user@computer ~]$ base remove orc
+[-] Orchestrator removed successfully. The main coordinator is now unassigned.
+
 [user@computer ~]$ cd Project_1
 [user@computer Project_1]$ base .
 
